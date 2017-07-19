@@ -1,0 +1,21 @@
+07:39:20 **** Build of configuration Debug for project YCVImageProcessing ****
+make all 
+Building file: ../hog/GetSupportVector/GetSupportVector160x96.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -std=c++11 -fPIC -MMD -MP -MF"hog/GetSupportVector/GetSupportVector160x96.d" -MT"hog/GetSupportVector/GetSupportVector160x96.d" -o "hog/GetSupportVector/GetSupportVector160x96.o" "../hog/GetSupportVector/GetSupportVector160x96.cpp"
+Finished building: ../hog/GetSupportVector/GetSupportVector160x96.cpp
+ 
+Building file: ../hog/hog.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -std=c++11 -fPIC -MMD -MP -MF"hog/hog.d" -MT"hog/hog.d" -o "hog/hog.o" "../hog/hog.cpp"
+../hog/hog.cpp: In member function ‘HOGDescriptor* HOGDescriptor::Initialize()’:
+../hog/hog.cpp:687:1: warning: control reaches end of non-void function [-Wreturn-type]
+ }
+ ^
+Finished building: ../hog/hog.cpp
+ 
+Building target: libYCVImageProcessing.so
+Invoking: GCC C++ Linker
+g++ -shared -o "libYCVImageProcessing.so"  ./hog/GetSupportVector/GetSupportVector160x96.o  ./hog/hog.o   
+Finished building target: libYCVImageProcessing.so
+ 
