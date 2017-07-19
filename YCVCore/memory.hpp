@@ -1,6 +1,8 @@
 #ifndef MEMORY_HPP
 #define MEMORY_HPP
 
+namespace ycv{
+
 template <typename T>
 void SafeRelease(T*& buf)
 {
@@ -8,6 +10,8 @@ void SafeRelease(T*& buf)
         delete[] buf;
         buf = nullptr;
     }
+}
+
 }
 
 #endif // MEMORY_HPP

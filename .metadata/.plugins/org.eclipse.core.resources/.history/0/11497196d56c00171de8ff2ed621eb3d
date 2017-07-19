@@ -1,0 +1,8 @@
+hog/hog.d: ../hog/hog.cpp ../hog/hog.h ../hog/../../YCVCore/core.hpp \
+ ../hog/../../YCVCore/memory.hpp
+
+../hog/hog.h:
+
+../hog/../../YCVCore/core.hpp:
+
+../hog/../../YCVCore/memory.hpp:
