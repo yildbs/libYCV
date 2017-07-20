@@ -5,6 +5,8 @@
 
 namespace ycv{
 
+namespace hog{
+
 HOGDescriptorSingle::HOGStaticCache HOGDescriptorSingle::static_cache;
 
 HOGDescriptorSingle::HOGStaticCache::HOGStaticCache()
@@ -13,12 +15,12 @@ HOGDescriptorSingle::HOGStaticCache::HOGStaticCache()
     for(int i=0;i<256;i++){
         lut[i] = std::sqrt(i);
     }
-    HOGDescriptorSingle::HOGStaticCache::gamma_lut = ycv::YMat<float>(256,1,1, lut);
+    HOGDescriptorSingle::HOGStaticCache::gamma_lut = YMat<float>(256,1,1, lut);
 
     for(int i=0;i<256;i++){
         lut[i] = i;
     }
-    HOGDescriptorSingle::HOGStaticCache::normal_lut = ycv::YMat<float>(256,1,1, lut);
+    HOGDescriptorSingle::HOGStaticCache::normal_lut = YMat<float>(256,1,1, lut);
 
     delete[] lut;
 }
@@ -29,27 +31,32 @@ HOGDescriptorSingle::HOGStaticCache::~HOGStaticCache()
 }
 
 HOGDescriptorSingle::HOGCache::HOGCache()
-    : width(0)
+    : gamma_correction(true)
+	, width(0)
     , height(0)
-	, block_width(0)
-	, block_height(0)
-	, lut(nullptr)
-	, cell_size(0)
-	, descriptor_size_width(0)
-	, descriptor_size_height(0)
-	, max_width_interest(0)
-	, max_height_interest(0)
-	, gamma_correction(true)
-	, block_width_in_descriptor(0)
-	, block_height_in_descriptor(0)
-	, scale_factor(1.1f)
-	, ymap(nullptr)
+	, channels(0)
 	, xmap(nullptr)
-	, cell_width(0)
-	, cell_height(0)
-    , channels(0)
+	, ymap(nullptr)
+	, lut(nullptr)
     , signed_gradient(false)
     , num_bins(9)
+	, cell_size(0)
+	, block_size(0)
+	, descriptor_size_width(0)
+	, descriptor_size_height(0)
+	, angle_scale(0.0f)
+	, cell_width(0)
+	, cell_height(0)
+	, block_width(0)
+	, block_height(0)
+	, block_width_in_descriptor(0)
+	, block_height_in_descriptor(0)
+	, descriptor_width(0)
+	, descriptor_height(0)
+	, max_width_interest(0)
+	, max_height_interest(0)
+	, rho(0.0f)
+	, scale_factor(1.1f)
 {
     this->angle_scale = this->signed_gradient
                 ? static_cast<float>(this->num_bins) / (2.0 * M_PI )
@@ -112,7 +119,7 @@ void HOGDescriptorSingle::Initialize(     const int width
                 _xmap[i+1] = i;
             }
             _xmap[width+1] = width-1;
-            this->cache._xmap = ycv::YMat<int>(width+2, 1, 1, _xmap);
+            this->cache._xmap = YMat<int>(width+2, 1, 1, _xmap);
             //this->cache.xmap = &this->cache._xmap.bits()[1];
             SafeRelease(_xmap);
         }else if(this->cache.channels == 3){
@@ -130,7 +137,7 @@ void HOGDescriptorSingle::Initialize(     const int width
             _xmap[width*3+3] = (width-1)*3+0;
             _xmap[width*3+4] = (width-1)*3+1;
             _xmap[width*3+5] = (width-1)*3+2;
-            this->cache._xmap = ycv::YMat<int>(total_length, 1, 1, _xmap);
+            this->cache._xmap = YMat<int>(total_length, 1, 1, _xmap);
             this->cache.xmap = &this->cache._xmap.bits()[3];
             SafeRelease(_xmap);
         }
@@ -145,14 +152,14 @@ void HOGDescriptorSingle::Initialize(     const int width
         for(int i=0;i<height;i++){
             _ymap[i+1] = i;
         }
-        this->cache._ymap = ycv::YMat<int>(height+2, 1, 1, _ymap);
+        this->cache._ymap = YMat<int>(height+2, 1, 1, _ymap);
         this->cache.ymap = &this->cache._ymap.bits()[1];
         SafeRelease(_ymap);
 
         // Allocate dbuf
-        this->cache.dbuf = ycv::YMat<float>(width*4);
-        this->cache.orientation = ycv::YMat<char>(width, height, 2);
-        this->cache.magnitude = ycv::YMat<float>(width, height, 2);
+        this->cache.dbuf = YMat<float>(width*4);
+        this->cache.orientation = YMat<char>(width, height, 2);
+        this->cache.magnitude = YMat<float>(width, height, 2);
 
         // Set lut
         this->cache.gamma_correction = gamma_correction;
@@ -181,12 +188,12 @@ void HOGDescriptorSingle::Initialize(     const int width
 
         this->cache.descriptor_width = this->cache.cell_width + 1 - this->cache.descriptor_size_width;
         this->cache.descriptor_height = this->cache.cell_height + 1 - this->cache.descriptor_size_height;
-        this->cache.descriptor = ycv::YMat<float>(1, 1, num_bins * this->cache.block_size * this->cache.block_size * this->cache.block_width_in_descriptor * this->cache.block_height_in_descriptor);
+        this->cache.descriptor = YMat<float>(1, 1, num_bins * this->cache.block_size * this->cache.block_size * this->cache.block_width_in_descriptor * this->cache.block_height_in_descriptor);
 
         this->cache.max_width_interest = this->cache.cell_width * cell_size;
         this->cache.max_height_interest = this->cache.cell_height * cell_size;
-        this->cache.histograms = ycv::YMat<float>(this->cache.cell_width, this->cache.cell_height, num_bins);
-        this->cache.blocks = ycv::YMat<float>(this->cache.block_width, this->cache.block_height, num_bins * this->cache.block_size * this->cache.block_size);
+        this->cache.histograms = YMat<float>(this->cache.cell_width, this->cache.cell_height, num_bins);
+        this->cache.blocks = YMat<float>(this->cache.block_width, this->cache.block_height, num_bins * this->cache.block_size * this->cache.block_size);
     }
 }
 
@@ -214,7 +221,7 @@ HOGDescriptorSingle::YRectList HOGDescriptorSingle::Detect()
             if(this->Predict()){
                 int x1 = static_cast<int>((float)cell_x * cell_size * scale_factor);
                 int y1 = static_cast<int>((float)cell_y * cell_size * scale_factor);
-                founds.push_back(ycv::YRect(x1, y1, width, height));
+                founds.push_back(YRect(x1, y1, width, height));
             }
         }
     }
@@ -489,7 +496,7 @@ void HOGDescriptorSingle::SetSupportVector(int length, float* ptr, float rho)
         throw std::string("error. The length of support vector and descriptor is not same!");
     }
     this->cache.rho = rho;
-    this->cache.support_vector = ycv::YMat<float>(length);
+    this->cache.support_vector = YMat<float>(length);
     ::memcpy(this->cache.support_vector.bits(), ptr, length*sizeof(float));
 }
 
@@ -596,19 +603,20 @@ inline float HOGDescriptorSingle::GetScaleFactor()
 
 
 HOGDescriptor::HOGDescriptor::HOGDescriptor()
-: width(0)
-, height(0)
-, channels(0)
-, scale_factor(1.05f)
-, nlevels(10)
-, gamma_correction(true)
-, signed_gradient(false)
-, num_bins(9)
-, cell_size(8)
-, block_size(2)
-, descriptor_size_width(6)
-, descriptor_size_height(12)
-, hog_descriptors(nullptr)
+	: width(0)
+	, height(0)
+	, channels(0)
+	, scale_factor(1.05f)
+	, nlevels(10)
+	, gamma_correction(true)
+	, signed_gradient(false)
+	, num_bins(9)
+	, cell_size(8)
+	, block_size(2)
+	, descriptor_size_width(6)
+	, descriptor_size_height(12)
+	, rho(0.0f)
+	, hog_descriptors(nullptr)
 {
 }
 
@@ -786,9 +794,11 @@ HOGDescriptor& HOGDescriptor::SetHitThreshold(float value)
 HOGDescriptor& HOGDescriptor::SetSupportVector(int length, float* ptr, float rho)
 {
     this->rho = rho;
-    this->support_vector = ycv::YMat<float>(length);
+    this->support_vector = YMat<float>(length);
     ::memcpy(this->support_vector.bits(), ptr, length*sizeof(float));
     return *this;
+}
+
 }
 
 }

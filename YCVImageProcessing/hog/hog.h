@@ -8,17 +8,19 @@
 
 namespace ycv{
 
+namespace hog{
+
 class HOGDescriptorSingle{
 public:
-    typedef ycv::YMat<unsigned char> YMat_;
-    typedef std::vector<ycv::YRect> YRectList;
+    typedef YMat<unsigned char> YMat_;
+    typedef std::vector<YRect> YRectList;
 
 private:
     class HOGStaticCache{
         friend class HOGDescriptorSingle;
     private:
-        ycv::YMat<float> gamma_lut;
-        ycv::YMat<float> normal_lut;
+        YMat<float> gamma_lut;
+        YMat<float> normal_lut;
 
     public:
         HOGStaticCache();
@@ -36,11 +38,11 @@ private:
         int channels;
 
         // Results
-        ycv::YMat<int> _xmap;
-        ycv::YMat<int> _ymap;
+        YMat<int> _xmap;
+        YMat<int> _ymap;
         int* xmap;
         int* ymap;
-        ycv::YMat<float> dbuf;
+        YMat<float> dbuf;
         float* lut;
         YMat_ gradients;
 
@@ -66,14 +68,14 @@ private:
         int descriptor_height;
         int max_width_interest;
         int max_height_interest;
-        ycv::YMat<char> orientation;
-        ycv::YMat<float> magnitude;
-        ycv::YMat<float> histograms; //cell histogram
-        ycv::YMat<float> blocks; //cell histogram
-        ycv::YMat<float> descriptor; //cell histogram
+        YMat<char> orientation;
+        YMat<float> magnitude;
+        YMat<float> histograms; //cell histogram
+        YMat<float> blocks; //cell histogram
+        YMat<float> descriptor; //cell histogram
 
         //Data
-        ycv::YMat<float> support_vector;
+        YMat<float> support_vector;
         float rho;
 
         float scale_factor;
@@ -127,8 +129,8 @@ public:
 };
 
 class HOGDescriptor{
-    typedef ycv::YMat<unsigned char> YMat_;
-    typedef std::vector<ycv::YRect> YRectList;
+    typedef YMat<unsigned char> YMat_;
+    typedef std::vector<YRect> YRectList;
 private:
     int width;
     int height;
@@ -143,7 +145,7 @@ private:
     int descriptor_size_width;
     int descriptor_size_height;
 
-    ycv::YMat<float> support_vector;
+    YMat<float> support_vector;
     float rho;
 
     HOGDescriptorSingle* hog_descriptors;
@@ -171,5 +173,7 @@ public:
     HOGDescriptor& SetSupportVector(int length, float* ptr, float rho);
 
 };
+
+}
 
 }

@@ -1,59 +1,18 @@
-09:59:10 **** Incremental Build of configuration Debug for project YCVImageProcessing ****
+17:54:33 **** Incremental Build of configuration Debug for project YCVImageProcessing ****
 make all 
+Building file: ../resize/resize.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -std=c++11 -fPIC -MMD -MP -MF"resize/resize.d" -MT"resize/resize.d" -o "resize/resize.o" "../resize/resize.cpp"
+Finished building: ../resize/resize.cpp
+ 
+Building file: ../hog/GetSupportVector/GetSupportVector160x96.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -std=c++11 -fPIC -MMD -MP -MF"hog/GetSupportVector/GetSupportVector160x96.d" -MT"hog/GetSupportVector/GetSupportVector160x96.d" -o "hog/GetSupportVector/GetSupportVector160x96.o" "../hog/GetSupportVector/GetSupportVector160x96.cpp"
+Finished building: ../hog/GetSupportVector/GetSupportVector160x96.cpp
+ 
 Building file: ../hog/hog.cpp
 Invoking: GCC C++ Compiler
 g++ -O0 -g3 -Wall -c -fmessage-length=0 -std=c++11 -fPIC -MMD -MP -MF"hog/hog.d" -MT"hog/hog.d" -o "hog/hog.o" "../hog/hog.cpp"
-In file included from ../hog/hog.cpp:1:0:
-../hog/hog.h: In constructor ‘ycv::HOGDescriptorSingle::HOGCache::HOGCache()’:
-../hog/hog.h:62:13: warning: ‘ycv::HOGDescriptorSingle::HOGCache::block_height’ will be initialized after [-Wreorder]
-         int block_height;
-             ^
-../hog/hog.h:44:16: warning:   ‘float* ycv::HOGDescriptorSingle::HOGCache::lut’ [-Wreorder]
-         float* lut;
-                ^
-../hog/hog.cpp:31:1: warning:   when initialized here [-Wreorder]
- HOGDescriptorSingle::HOGCache::HOGCache()
- ^
-In file included from ../hog/hog.cpp:1:0:
-../hog/hog.h:68:13: warning: ‘ycv::HOGDescriptorSingle::HOGCache::max_height_interest’ will be initialized after [-Wreorder]
-         int max_height_interest;
-             ^
-../hog/hog.h:33:14: warning:   ‘bool ycv::HOGDescriptorSingle::HOGCache::gamma_correction’ [-Wreorder]
-         bool gamma_correction;
-              ^
-../hog/hog.cpp:31:1: warning:   when initialized here [-Wreorder]
- HOGDescriptorSingle::HOGCache::HOGCache()
- ^
-In file included from ../hog/hog.cpp:1:0:
-../hog/hog.h:79:15: warning: ‘ycv::HOGDescriptorSingle::HOGCache::scale_factor’ will be initialized after [-Wreorder]
-         float scale_factor;
-               ^
-../hog/hog.h:42:14: warning:   ‘int* ycv::HOGDescriptorSingle::HOGCache::ymap’ [-Wreorder]
-         int* ymap;
-              ^
-../hog/hog.cpp:31:1: warning:   when initialized here [-Wreorder]
- HOGDescriptorSingle::HOGCache::HOGCache()
- ^
-In file included from ../hog/hog.cpp:1:0:
-../hog/hog.h:42:14: warning: ‘ycv::HOGDescriptorSingle::HOGCache::ymap’ will be initialized after [-Wreorder]
-         int* ymap;
-              ^
-../hog/hog.h:41:14: warning:   ‘int* ycv::HOGDescriptorSingle::HOGCache::xmap’ [-Wreorder]
-         int* xmap;
-              ^
-../hog/hog.cpp:31:1: warning:   when initialized here [-Wreorder]
- HOGDescriptorSingle::HOGCache::HOGCache()
- ^
-In file included from ../hog/hog.cpp:1:0:
-../hog/hog.h:60:13: warning: ‘ycv::HOGDescriptorSingle::HOGCache::cell_height’ will be initialized after [-Wreorder]
-         int cell_height;
-             ^
-../hog/hog.h:36:13: warning:   ‘int ycv::HOGDescriptorSingle::HOGCache::channels’ [-Wreorder]
-         int channels;
-             ^
-../hog/hog.cpp:31:1: warning:   when initialized here [-Wreorder]
- HOGDescriptorSingle::HOGCache::HOGCache()
- ^
 Finished building: ../hog/hog.cpp
  
 Building target: libYCVImageProcessing.so
