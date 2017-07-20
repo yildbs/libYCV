@@ -6,6 +6,8 @@
 #include "../../YCVCore/core.hpp"
 #include "../../YCVCore/memory.hpp"
 
+namespace ycv{
+
 class HOGDescriptorSingle{
 public:
     typedef ycv::YMat<unsigned char> YMat_;
@@ -152,20 +154,22 @@ public:
 
     YRectList DetectMultiScale(YMat_& image);
 
-    HOGDescriptor* Initialize();
-    HOGDescriptor* SetWidth(int value);
-    HOGDescriptor* SetHeight(int value);
-    HOGDescriptor* SetChannels(int value);
-    HOGDescriptor* SetScaleFactor(float value);
-    HOGDescriptor* SetNlevels(int value);
-    HOGDescriptor* SetGammaCorrection(bool value);
-    HOGDescriptor* SetSignedGradient(bool value);
-    HOGDescriptor* SetNumBins(int value);
-    HOGDescriptor* SetCellSize(int value);
-    HOGDescriptor* SetBlockSize(int value);
-    HOGDescriptor* SetDescriptorSizeWidth(int value);
-    HOGDescriptor* SetDescriptorSizeHeight(int value);
-    HOGDescriptor* SetHitThreshold(float value);
-    HOGDescriptor* SetSupportVector(int length, float* ptr, float rho);
+    HOGDescriptor& Initialize();
+    HOGDescriptor& SetWidth(int value);
+    HOGDescriptor& SetHeight(int value);
+    HOGDescriptor& SetChannels(int value);
+    HOGDescriptor& SetScaleFactor(float value);
+    HOGDescriptor& SetNlevels(int value);
+    HOGDescriptor& SetGammaCorrection(bool value);
+    HOGDescriptor& SetSignedGradient(bool value);
+    HOGDescriptor& SetNumBins(int value);
+    HOGDescriptor& SetCellSize(int value);
+    HOGDescriptor& SetBlockSize(int value);
+    HOGDescriptor& SetDescriptorSizeWidth(int value);
+    HOGDescriptor& SetDescriptorSizeHeight(int value);
+    HOGDescriptor& SetHitThreshold(float value);
+    HOGDescriptor& SetSupportVector(int length, float* ptr, float rho);
 
 };
+
+}

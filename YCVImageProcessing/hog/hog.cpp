@@ -3,6 +3,8 @@
 #include <fstream>
 #include <stdio.h>
 
+namespace ycv{
+
 HOGDescriptorSingle::HOGStaticCache HOGDescriptorSingle::static_cache;
 
 HOGDescriptorSingle::HOGStaticCache::HOGStaticCache()
@@ -615,7 +617,7 @@ HOGDescriptor::HOGDescriptor::~HOGDescriptor()
     SafeRelease(this->hog_descriptors);
 }
 
-
+#ifdef USE_OPENCV
 #include "opencv2/imgproc.hpp"
 #include "opencv2/highgui.hpp"
 HOGDescriptor::YRectList HOGDescriptor::DetectMultiScale(YMat_& yimage)
@@ -645,8 +647,9 @@ HOGDescriptor::YRectList HOGDescriptor::DetectMultiScale(YMat_& yimage)
     }
     return founds;
 }
+#endif
 
-HOGDescriptor* HOGDescriptor::Initialize()
+HOGDescriptor& HOGDescriptor::Initialize()
 {
     int const width = this->width;
     int const height = this->height;
@@ -669,7 +672,6 @@ HOGDescriptor* HOGDescriptor::Initialize()
          || this->support_vector.GetLength() == 0 ){
         throw std::string("HOGDescriptor is not initialized");
     }
-
 
     this->hog_descriptors = new HOGDescriptorSingle[nlevels];
 
@@ -700,90 +702,93 @@ HOGDescriptor* HOGDescriptor::Initialize()
 		scale_factor_single *= scale_factor;
     }
     this->nlevels = level;
+    return *this;
 }
 
-HOGDescriptor* HOGDescriptor::SetWidth(int value)
+HOGDescriptor& HOGDescriptor::SetWidth(int value)
 {
     this->width = value;
-    return this;
+    return *this;
 }
 
-HOGDescriptor* HOGDescriptor::SetHeight(int value)
+HOGDescriptor& HOGDescriptor::SetHeight(int value)
 {
     this->height = value;
-    return this;
+    return *this;
 }
 
-HOGDescriptor* HOGDescriptor::SetChannels(int value)
+HOGDescriptor& HOGDescriptor::SetChannels(int value)
 {
     this->channels = value;
-    return this;
+    return *this;
 }
 
-HOGDescriptor* HOGDescriptor::SetScaleFactor(float value)
+HOGDescriptor& HOGDescriptor::SetScaleFactor(float value)
 {
     this->scale_factor = value;
-    return this;
+    return *this;
 }
 
-HOGDescriptor* HOGDescriptor::SetNlevels(int value)
+HOGDescriptor& HOGDescriptor::SetNlevels(int value)
 {
     this->nlevels = value;
-    return this;
+    return *this;
 }
 
-HOGDescriptor* HOGDescriptor::SetGammaCorrection(bool value)
+HOGDescriptor& HOGDescriptor::SetGammaCorrection(bool value)
 {
     this->gamma_correction = value;
-    return this;
+    return *this;
 }
 
-HOGDescriptor* HOGDescriptor::SetSignedGradient(bool value)
+HOGDescriptor& HOGDescriptor::SetSignedGradient(bool value)
 {
     this->signed_gradient = value;
-    return this;
+    return *this;
 }
 
-HOGDescriptor* HOGDescriptor::SetNumBins(int value)
+HOGDescriptor& HOGDescriptor::SetNumBins(int value)
 {
     this->num_bins = value;
-    return this;
+    return *this;
 }
 
-HOGDescriptor* HOGDescriptor::SetCellSize(int value)
+HOGDescriptor& HOGDescriptor::SetCellSize(int value)
 {
     this->cell_size = value;
-    return this;
+    return *this;
 }
 
-HOGDescriptor* HOGDescriptor::SetBlockSize(int value)
+HOGDescriptor& HOGDescriptor::SetBlockSize(int value)
 {
     this->block_size = value;
-    return this;
+    return *this;
 }
 
-HOGDescriptor* HOGDescriptor::SetDescriptorSizeWidth(int value)
+HOGDescriptor& HOGDescriptor::SetDescriptorSizeWidth(int value)
 {
     this->descriptor_size_width = value;
-    return this;
+    return *this;
 }
 
-HOGDescriptor* HOGDescriptor::SetDescriptorSizeHeight(int value)
+HOGDescriptor& HOGDescriptor::SetDescriptorSizeHeight(int value)
 {
     this->descriptor_size_height = value;
-    return this;
+    return *this;
 }
 
-HOGDescriptor* HOGDescriptor::SetHitThreshold(float value)
+HOGDescriptor& HOGDescriptor::SetHitThreshold(float value)
 {
     this->rho = value;
-    return this;
+    return *this;
 }
 
-HOGDescriptor* HOGDescriptor::SetSupportVector(int length, float* ptr, float rho)
+HOGDescriptor& HOGDescriptor::SetSupportVector(int length, float* ptr, float rho)
 {
     this->rho = rho;
     this->support_vector = ycv::YMat<float>(length);
     ::memcpy(this->support_vector.bits(), ptr, length*sizeof(float));
-    return this;
+    return *this;
+}
+
 }
