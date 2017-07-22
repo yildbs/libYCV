@@ -243,7 +243,7 @@ void HOGDescriptorSingle::MakeHistogram()
     int const step = width * ch;
     int* const  xmap = this->cache.xmap;
     int* const  ymap = this->cache.ymap;
-    float const* const lut = this->cache.lut;
+    float* const lut = this->cache.lut;
     char* const orientation = this->cache.orientation.bits();
     float* const magnitude = this->cache.magnitude.bits();
     float* const histogram = this->cache.histograms.bits();
@@ -485,7 +485,7 @@ int HOGDescriptorSingle::GetDescriptorLength() const
     return this->cache.descriptor.GetLength();
 }
 
-float* HOGDescriptorSingle::GetDescriptor() const
+float* const HOGDescriptorSingle::GetDescriptor()
 {
     return this->cache.descriptor.bits();
 }
@@ -504,7 +504,7 @@ int HOGDescriptorSingle::GetSupportVectorLength() const
 {
     return this->cache.support_vector.GetLength();
 }
-float* HOGDescriptorSingle::GetSupportVector() const
+float* HOGDescriptorSingle::GetSupportVector()
 {
     return this->cache.support_vector.bits();
 }
@@ -588,7 +588,7 @@ void HOGDescriptorSingle::SetHitThreahold(float hit_threshold)
     this->cache.rho = hit_threshold;
 }
 
-inline float* HOGDescriptorSingle::GetHistogram(int cell_x_idx, int cell_y_idx) const
+inline float* const HOGDescriptorSingle::GetHistogram(int cell_x_idx, int cell_y_idx)
 {
     if( cell_x_idx >= this->cache.cell_width || cell_y_idx >= this->cache.cell_height ){
         throw std::string("out of range error!");
@@ -596,7 +596,7 @@ inline float* HOGDescriptorSingle::GetHistogram(int cell_x_idx, int cell_y_idx) 
     return &this->cache.histograms.bits()[cell_y_idx*this->cache.cell_width*this->cache.num_bins + cell_x_idx*this->cache.num_bins];
 }
 
-inline float HOGDescriptorSingle::GetScaleFactor()
+inline const float HOGDescriptorSingle::GetScaleFactor()
 {
     return this->cache.scale_factor;
 }

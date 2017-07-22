@@ -1,0 +1,18 @@
+#include "resize.h"
+
+namespace ycv{
+
+
+template <typename T>
+void Resize(YMat<T> src, YMat<T> dst, YSize size=YSize(0, 0))
+{
+	if(size == YSize(0, 0)){
+
+	}
+
+
+}
+
+
+
+}

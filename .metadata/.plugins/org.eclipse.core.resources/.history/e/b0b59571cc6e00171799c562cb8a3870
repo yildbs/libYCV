@@ -1,0 +1,31 @@
+#include "resize.h"
+
+namespace ycv{
+
+
+template <typename T>
+void Resize(YMat<T> &src, YMat<T> &dst, YSize size=YSize(0, 0))
+{
+	int src_width = src.GetWidth();
+	int src_height = src.GetHeight();
+	int num_channels = src.GetChannels();
+
+	assert(num_channels==1 && "Only resizing 1 channel images is implemented");
+
+	if(size == YSize(0, 0)){
+		dst = YMat<T>(size.GetW(), size.GetH(), num_channels);
+	}
+
+	int dst_width = dst.GetWidth();
+	int dst_height = dst.GetHeight();
+
+	double inv_scale_x = (double)dst_width/src_width;
+	double inv_scale_y = (double)dst_height/src_height;
+
+
+
+}
+
+
+
+}

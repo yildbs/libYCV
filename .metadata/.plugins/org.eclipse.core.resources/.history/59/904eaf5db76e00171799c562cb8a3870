@@ -1,0 +1,22 @@
+#include "resize.h"
+
+namespace ycv{
+
+
+template <typename T>
+void Resize(YMat<T> src, YMat<T> dst, YSize size=YSize(0, 0))
+{
+	int src_width = src.W();
+	int src_height = src.H();
+	int src_height = src.H();
+
+	if(size == YSize(0, 0)){
+
+	}
+
+
+}
+
+
+
+}

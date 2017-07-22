@@ -2,6 +2,7 @@
 
 #include <cstddef>
 #include <cstring>
+#include <vector>
 
 namespace ycv{
 
@@ -27,7 +28,12 @@ class YSize{
         YSize& operator=(YSize&& sz){
             return this->operator =(sz);
         }
-
+        bool operator==(YSize&& sz){
+        	if(this->w == sz.w && this->h == sz.h){
+        		return true;
+        	}
+        	return false;
+        }
         virtual ~YSize()
 		{
 		}
@@ -105,7 +111,8 @@ class YPoint{
 template <typename T>
 class YMat{
 	private:
-		T* data; //Point for data
+		std::vector<T> buffer;
+		//T* data; //Point for data
 		size_t length; // Number of elements for T
 		int width; // Width for T as matrix
 		int height; // Height for T as matrix
@@ -113,8 +120,8 @@ class YMat{
 
 	public:
 		YMat()
-			: data(nullptr)
-			, length(0)
+			//: data(nullptr)
+			: length(0)
 			, width(0)
 			, height(0)
 			, channels(0)
@@ -125,7 +132,7 @@ class YMat{
             this->length = 0;
 			this->SetSize(width, height, channels);
             if( data ){
-                ::memcpy(this->data, data, sizeof(T)*this->length);
+                ::memcpy(this->bits(), data, sizeof(T)*this->length);
             }
 		}
 		virtual ~YMat()
@@ -138,7 +145,7 @@ class YMat{
 				return;
 			}
 
-            delete[] this->data;
+            //delete[] this->data;
 			this->length = 0;
 			this->width = 0;
 			this->height = 0;
@@ -150,7 +157,7 @@ class YMat{
 			if( this->length == 0 ) {
 				return;
 			}
-			::memset(this->data, 0, this->length*sizeof(T));
+			::memset(this->bits(), 0, this->length*sizeof(T));
 		}
 		void SetSize(const int width, const int height=1, const int channels=1)
 		{
@@ -167,7 +174,7 @@ class YMat{
 			this->width = width;
 			this->height = height;
 			this->channels = channels;
-			this->data = new T[this->length];
+			this->buffer.reserve(this->length);
 			this->FillZeros();
 		}
 		void SetSize(const YSize& s, const int channels=1)
@@ -190,19 +197,18 @@ class YMat{
         {
             return this->length;
         }
-
         YMat<T>& operator=(YMat<T>& img)
 		{
 			//Shallow copy to this
 			this->Clear();
-			this->data		= img.data;
+			//this->data		= img.data;
+			this->buffer 	= img.buffer;
 			this->length	= img.length;
 			this->width		= img.width;
 			this->height	= img.height;
 			this->channels	= img.channels;
 
             //Clear img
-            img.data = nullptr;
             img.length = 0;
             img.width = 0;
             img.height = 0;
@@ -214,7 +220,6 @@ class YMat{
         {
             return this->operator =(img);
         }
-
 		void CopyTo(YMat<T>& img)
 		{
 			img.Clear();
@@ -223,11 +228,12 @@ class YMat{
 			img.width	 = this->width;
 			img.height	 = this->height;
 			img.channels = this->channels;
-			::memcpy(img.data, this->data, sizeof(T)*this->length);
+			::memcpy(img.bits(), this->bits(), sizeof(T)*this->length);
 		}
-        T* bits() const
+		T* const bits()
         {
-            return this->data;
+			assert(this->GetLength()!=0);
+			return &this->buffer[0];
         }
 };
 

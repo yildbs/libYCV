@@ -116,16 +116,16 @@ public:
     void NormalizeBlock(float* const hist, int const block_length);
     void MakeDescriptor(int cell_x_idx, int cell_y_idx);
     int GetDescriptorLength() const;
-    float* GetDescriptor() const;
+    float* const GetDescriptor();
     void SetSupportVector(int length, float* ptr, float rho);
     int GetSupportVectorLength() const;
-    float* GetSupportVector() const;
+    float* GetSupportVector();
     bool Predict();
     void SaveDescriptor();
     void SaveSupportVector();
     void SetHitThreahold(float hit_threshold);
-    inline float* GetHistogram(int cell_x_idx, int cell_y_idx) const;
-    inline float GetScaleFactor();
+    inline float* const GetHistogram(int cell_x_idx, int cell_y_idx);
+    inline const float GetScaleFactor();
 };
 
 class HOGDescriptor{
