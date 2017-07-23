@@ -11,15 +11,27 @@ const size_t MAX_ESIZE = 16;
 const int INTER_RESIZE_COEF_BITS=11;
 const int INTER_RESIZE_COEF_SCALE=1 << INTER_RESIZE_COEF_BITS;
 
-void Hresize(	const T** src, WT** dst, int count,
-        const int* xofs, const AT* alpha,
+//resizeGeneric_<
+//    HResizeLinear<uchar, int, short,
+//        INTER_RESIZE_COEF_SCALE,
+//        HResizeLinearVec_8u32s>,
+//    VResizeLinear<uchar, int, short,
+//        FixedPtCast<int, uchar, INTER_RESIZE_COEF_BITS*2>,
+//        VResizeLinearVec_32s8u> >,e
+//0,
+//T: uchar
+//WT: int
+//AT: short
+
+void Hresize(	const unsigned char** src, int** dst, int count,
+        const int* xofs, const short* alpha,
         int swidth, int dwidth, int cn, int xmin, int xmax ) const
 {
     int dx, k;
     VecOp vecOp;
 
-    int dx0 = vecOp((const uchar**)src, (uchar**)dst, count,
-        xofs, (const uchar*)alpha, swidth, dwidth, cn, xmin, xmax );
+    int dx0 = vecOp((const unsigned char**)src, (unsigned char**)dst, count,
+        xofs, (const unsigned char*)alpha, swidth, dwidth, cn, xmin, xmax );
 
     for( k = 0; k <= count - 2; k++ )
     {
@@ -127,10 +139,11 @@ void ResizeGeneric(	const YMat<unsigned char> &src,
         }
 
         //TODO
-        if( k0 < ksize )
-            hresize( (const T**)(srows + k0), (WT**)(rows + k0), ksize - k0, xofs, (const AT*)(alpha),
+        if( k0 < ksize ){
+            Hresize( (const unsigned char**)(srows + k0), (int**)(rows + k0), ksize - k0, xofs, (const short*)(alpha),
                     ssize.width, dsize.width, cn, xmin, xmax );
-        vresize( (const WT**)rows, (T*)(dst.data + dst.step*dy), beta, dsize.width );
+        }
+        Vresize( (const int**)rows, (unsigned char*)(dst.data + dst.step*dy), beta, dsize.width );
     }
 
 }
