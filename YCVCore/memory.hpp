@@ -11,7 +11,6 @@ void SafeRelease(T*& buf)
         buf = nullptr;
     }
 }
-
 }
 
 #endif // MEMORY_HPP

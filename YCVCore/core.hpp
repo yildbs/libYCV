@@ -3,6 +3,7 @@
 #include <cstddef>
 #include <cstring>
 #include <vector>
+#include <assert.h>
 
 namespace ycv{
 
@@ -128,6 +129,7 @@ class YMat{
 		{
 		}
         YMat(const int width, const int height=1, const int channels=1, T* data=nullptr)
+        :YMat()
 		{
             this->length = 0;
 			this->SetSize(width, height, channels);
@@ -230,7 +232,7 @@ class YMat{
 			img.channels = this->channels;
 			::memcpy(img.bits(), this->bits(), sizeof(T)*this->length);
 		}
-		T* const bits()
+		T* bits() const
         {
 			assert(this->GetLength()!=0);
 			return &this->buffer[0];
