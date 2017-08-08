@@ -1,3 +1,10 @@
+/*
+ * memory.hpp
+ *
+ *  Created on: Aug 8, 2017
+ *      Author: yildbs
+ */
+
 #ifndef MEMORY_HPP
 #define MEMORY_HPP
 
@@ -14,4 +21,3 @@ void SafeRelease(T*& buf)
 }
 
 #endif // MEMORY_HPP
-

@@ -1,8 +1,7 @@
 #pragma once
 
-#include <cstddef>
+#include <memory>
 #include <cstring>
-#include <vector>
 #include <assert.h>
 
 namespace ycv{
@@ -10,7 +9,6 @@ namespace ycv{
 class YSize{
     private:
 		int w, h;
-
     public:
         YSize()
             : w(0)
@@ -20,7 +18,6 @@ class YSize{
 			: w(w)
 			, h(h)
         {}
-
         YSize& operator=(YSize& sz){
             this->w = sz.w;
             this->h = sz.h;
@@ -112,17 +109,15 @@ class YPoint{
 template <typename T>
 class YMat{
 	private:
-		std::vector<T> buffer;
-		//T* data; //Point for data
-		size_t length; // Number of elements for T
+		std::shared_ptr<T> data;
+		size_t capacity; // The total number of elements for T
 		int width; // Width for T as matrix
 		int height; // Height for T as matrix
 		int channels; // Channels for T as matrix
-
 	public:
 		YMat()
-			//: data(nullptr)
-			: length(0)
+			: data(nullptr)
+			, capacity(0)
 			, width(0)
 			, height(0)
 			, channels(0)
@@ -131,53 +126,36 @@ class YMat{
         YMat(const int width, const int height=1, const int channels=1, T* data=nullptr)
         :YMat()
 		{
-            this->length = 0;
 			this->SetSize(width, height, channels);
             if( data ){
-                ::memcpy(this->bits(), data, sizeof(T)*this->length);
+                memcpy(this->bits(), data, sizeof(T)*this->GetLength());
             }
 		}
 		virtual ~YMat()
 		{
-			this->Clear();
-		}
-        void Clear()
-		{
-			if(this->length == 0){
-				return;
-			}
-
-            //delete[] this->data;
-			this->length = 0;
-			this->width = 0;
-			this->height = 0;
-            this->channels = 0;
-
 		}
 		void FillZeros()
 		{
-			if( this->length == 0 ) {
+			if( this->capacity == 0 ) {
 				return;
 			}
-			::memset(this->bits(), 0, this->length*sizeof(T));
+			memset(this->bits(), 0, this->GetLength()*sizeof(T));
 		}
 		void SetSize(const int width, const int height=1, const int channels=1)
 		{
-            if( this->length == static_cast<size_t>(width * height * channels) ){
-				this->length = width * height * channels;
+            if( this->capacity >= static_cast<size_t>(width * height * channels) ){
 				this->width = width;
 				this->height = height;
 				this->channels = channels;
-				this->FillZeros();
 				return;
 			}
-			this->Clear();
-			this->length = width * height * channels;
+            this->capacity = width * height * channels;
 			this->width = width;
 			this->height = height;
 			this->channels = channels;
-			this->buffer.reserve(this->length);
-			this->FillZeros();
+			this->data = std::shared_ptr<T>(new T[this->capacity], [](T* ptr){
+				delete[] ptr;
+			});
 		}
 		void SetSize(const YSize& s, const int channels=1)
 		{
@@ -195,47 +173,34 @@ class YMat{
 		{
 			return this->channels;
 		}
-        int GetLength() const
+        inline int GetLength() const
         {
-            return this->length;
+            return this->width*this->height*this->channels;
         }
+        // Shallow copy
         YMat<T>& operator=(YMat<T>& img)
 		{
-			//Shallow copy to this
-			this->Clear();
-			//this->data		= img.data;
-			this->buffer 	= img.buffer;
-			this->length	= img.length;
+        	this->capacity 	= img.capacity;
+			this->data		= img.data;
 			this->width		= img.width;
 			this->height	= img.height;
 			this->channels	= img.channels;
-
-            //Clear img
-            img.length = 0;
-            img.width = 0;
-            img.height = 0;
-            img.channels = 0;
-
 			return *this;
 		}
         YMat<T>& operator=(YMat<T>&& img)
         {
             return this->operator =(img);
         }
+        // Deep copy
 		void CopyTo(YMat<T>& img)
 		{
-			img.Clear();
 			img.SetSize(this->width, this->height, this->channels);
-			img.length	 = this->length;
-			img.width	 = this->width;
-			img.height	 = this->height;
-			img.channels = this->channels;
-			::memcpy(img.bits(), this->bits(), sizeof(T)*this->length);
+			memcpy(img.bits(), this->bits(), sizeof(T)*this->GetLength());
 		}
 		T* const bits() const
         {
 			assert(this->GetLength()!=0);
-			return &this->buffer[0];
+			return this->data.get();
         }
 };
 

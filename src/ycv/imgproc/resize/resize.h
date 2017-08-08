@@ -9,6 +9,5 @@
 #define RESIZE_H_
 
 #include <ycv/core/core.hpp>
-#include <ycv/core/memory.hpp>
 
 #endif /* RESIZE_H_ */
