@@ -392,7 +392,7 @@ void HOGDescriptorSingle::MakeNormalizedBlocks()
             for(int _y=0;_y<block_size;_y++){
                 for(int _x=0;_x<block_size;_x++){
                     float* const src = this->GetHistogram(x+_x, y+_y);///////It is too odd....
-                    memcpy(&dst_x[idx++*num_bins], src, num_bins*sizeof(float));
+                    ::memcpy(&dst_x[idx++*num_bins], src, num_bins*sizeof(float));
                 }
             }
             this->NormalizeBlock(dst_x, block_length);
@@ -475,7 +475,7 @@ void HOGDescriptorSingle::MakeDescriptor(int cell_x_idx, int cell_y_idx)
         float* const dst_y = &block[y*block_width*block_length];
         for(int x=cell_x_idx;x<cell_x_idx+block_width_in_descriptor;x++){
             float* const block = &dst_y[x*block_length];
-            memcpy(&descriptor[idx++*block_length], block, block_length*sizeof(float));
+            ::memcpy(&descriptor[idx++*block_length], block, block_length*sizeof(float));
         }
     }
 }
@@ -497,7 +497,7 @@ void HOGDescriptorSingle::SetSupportVector(int length, float* ptr, float rho)
     }
     this->cache.rho = rho;
     this->cache.support_vector = YMat<float>(length);
-    memcpy(this->cache.support_vector.bits(), ptr, length*sizeof(float));
+    ::memcpy(this->cache.support_vector.bits(), ptr, length*sizeof(float));
 }
 
 int HOGDescriptorSingle::GetSupportVectorLength() const
@@ -636,7 +636,7 @@ HOGDescriptor::YRectList HOGDescriptor::DetectMultiScale(YMat_& yimage)
     int const height = yimage.GetHeight();
 
     cv::Mat image(height, width, CV_8UC3, yimage.bits());
-    memcpy(image.data, yimage.bits(), sizeof(char)*width*height*3);
+    ::memcpy(image.data, yimage.bits(), sizeof(char)*width*height*3);
 
     for(int level = 0;level<nlevels;level++){
         cv::Mat resized_image;
@@ -795,7 +795,7 @@ HOGDescriptor& HOGDescriptor::SetSupportVector(int length, float* ptr, float rho
 {
     this->rho = rho;
     this->support_vector = YMat<float>(length);
-    memcpy(this->support_vector.bits(), ptr, length*sizeof(float));
+    ::memcpy(this->support_vector.bits(), ptr, length*sizeof(float));
     return *this;
 }
 

@@ -3,6 +3,7 @@
 	<name>libYCV</name>
 	<comment></comment>
 	<projects>
+		<project>libYCV</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
