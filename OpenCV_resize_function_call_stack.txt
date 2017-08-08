@@ -1,7 +1,0 @@
-cv::resize imgwarp.cpp:3485
-	cv::hal::resize imgwarp.cpp:3129
-		func=resizeGeneric_ imgwarp.cpp:1774
-			resizeGeneric_Invoker imgwarp.cpp:1697
-			resizeGeneric_Invoker::operator() imgwarp.cpp:1713
-				hresize=HResizeLinear::operator() imgwarp.cpp:1406
-				vresize=VResizeLinear::operator() imgwarp.cpp:1492
